@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>EditItem</title>
+    <style>
+    </style>
+</head>
+<body>
+
+<form th:action="@{/manage/edit/{id}(id=${item.id})}" method="post">
+    <input type="hidden" th:value="${item.id}">
+
+    <div>
+        <label for="name">제품명</label>
+        <input id="name" name="name" th:value="${item.name}" required>
+    </div>
+
+    <div>
+        <label for="code">분류코드</label>
+        <input id="code" name="code" th:value="${item.code}">
+    </div>
+
+    <div>
+        <label for="price">가격</label>
+        <input id="price" name="price" th:value="${item.price}" required>
+    </div>
+
+    <div>
+        <label for="stock">수량</label>
+        <input id="stock" name="stock" th:value="${item.stock}" required>
+    </div>
+
+    <div>
+        판매상태
+        <input th:if="${item.status != null}" type="checkbox" name="status" checked>
+        <input th:unless="${item.status != null}" type="checkbox" name="status">
+    </div>
+
+    <button type="submit">수정</button>
+    <button type="button" onclick="listReq()">취소</button>
+</form>
+
+</body>
+<script th:inline="javascript">
+    const listReq = () => {
+        location.href = "/manage";
+    }
+</script>
+
+</html>

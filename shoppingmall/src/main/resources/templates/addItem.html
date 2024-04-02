@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>AddItem</title>
+    <style>
+        #header {
+            width: 100%;
+            background-color: #E6E1DC;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 10px;
+        }
+
+        #header-right-content {
+            margin-right: 15px;
+        }
+
+        #title {
+            margin-left: 20px;
+        }
+
+        #header-right-content-button1 {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+<div id="header">
+    <div id="title">
+        <h2>Danggueni Shop</h2>
+    </div>
+
+    <div id="header-right-content">
+        <span id="header-right-content-button1">LOGIN </span>
+        <span> JOIN</span>
+    </div>
+</div>
+<form action="/add" method="post">
+    <div>
+    <label for="name">제품명</label>
+    <input id="name" name="name" required>
+    </div>
+
+    <div>
+    <label for="code">분류코드</label>
+    <input id="code" name="code">
+    </div>
+
+    <div>
+    <label for="price">가격</label>
+    <input id="price" name="price" required>
+    </div>
+
+    <div>
+    <label for="stock">수량</label>
+    <input id="stock" name="stock" required>
+    </div>
+
+    <div>
+    <label for="status">판매상태</label>
+    <input type="checkbox" id="status" name="status">
+    </div>
+
+    <button type="submit">등록</button>
+    <button onclick="listReq()">취소</button>
+</form>
+</body>
+<script th:inline="javascript">
+    const listReq = () => {
+        location.href = "/";
+    }
+</script>
+
+</html>

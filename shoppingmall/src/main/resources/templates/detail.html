@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Detail</title>
+    <style>
+        #header {
+            width: 100%;
+            background-color: #E6E1DC;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 10px;
+        }
+
+        #header-right-content {
+            margin-right: 15px;
+        }
+
+        #title {
+            margin-left: 20px;
+            cursor: pointer;
+        }
+
+        #header-right-content-button1 {
+            margin-right: 5px;
+        }
+
+        #content-body {
+            width: 100%;
+            display: flex;
+
+        }
+
+        #left-body {
+            width: 50%;
+            height: 50%;
+        }
+
+        #right-body {
+            width: 50%;
+            height: 50%;
+        }
+
+        #price {
+            font-weight: 600;
+            margin-right: 3%;
+        }
+
+        .space {
+            width: 3%;
+            height: 20px;
+        }
+
+    </style>
+</head>
+<body>
+<div id="header">
+    <div id="title">
+        <h2 onclick="listReq()">Danggueni Shop</h2>
+    </div>
+    <div id="header-right-content">
+        <span id="header-right-content-button1">LOGIN </span>
+        <span> JOIN</span>
+    </div>
+</div>
+<div id="content-body">
+    <div id="left-body">사진란</div>
+    <div id="right-body">
+        <div>
+            <span th:text="${item.name}"></span>
+        </div>
+        <div class="space"></div>
+        <div>
+            <span id="price" th:text="판매가"></span>
+            <span th:text="${#numbers.formatInteger(item.price, 3, 'COMMA')} + '원'"></span>
+        </div>
+        <div class="space"></div>
+        <div>
+            <span th:text="'현재 수량'"></span>
+            <span th:text="${item.stock}"></span>
+        </div>
+        <div class="space"></div>
+        <div>
+            <div>바로구매</div>
+            <div>찜하기</div>
+        </div>
+    </div>
+</div>
+</body>
+
+<script th:inline="javascript">
+    const listReq = () => {
+        location.href = "/";
+    }
+</script>
+</html>

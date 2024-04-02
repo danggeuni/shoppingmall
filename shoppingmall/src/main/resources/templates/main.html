@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        table, tr, td, th{
+            border: 1px solid black;
+        }
+
+        th, td {
+            padding : 10px;
+        }
+
+        #header {
+            width: 100%;
+            background-color: #E6E1DC;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 10px;
+        }
+
+        #header-right-content {
+            margin-right: 15px;
+        }
+
+        #title {
+            margin-left: 20px;
+        }
+
+        #header-right-content-button1 {
+            margin-right: 5px;
+        }
+
+        button {
+            border: 0;
+            background-color: transparent;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div id="header">
+    <div id="title">
+        <h2>Danggueni Shop</h2>
+    </div>
+
+    <div id="header-right-content">
+        <button id="header-right-content-button1" th:onclick="|location.href='@{/user/login}'|">LOGIN </button>
+        <button th:onclick="|location.href='@{/user/join}'|"> JOIN</button>
+    </div>
+</div>
+<table>
+    <thead>
+    <tr>
+        <td>ID</td>
+        <td>제품명</td>
+        <td>가격</td>
+        <td>재고수량</td>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="data : ${item}">
+        <td th:text="${data.id}"></td>
+        <td>
+            <a th:href="@{/item/{id} (id=${data.id}) }" th:text="${data.name}"></a>
+        </td>
+        <td th:text="${data.price}"></td>
+        <td th:text="${data.stock}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        table, tr, td, th{
+            border: 1px solid black;
+        }
+
+        th, td {
+            padding : 10px;
+        }
+
+        #header {
+            width: 100%;
+            background-color: #E6E1DC;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 10px;
+        }
+
+        #header-right-content {
+            margin-right: 15px;
+        }
+
+        #title {
+            margin-left: 20px;
+        }
+
+        #header-right-content-button1 {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+<div id="header">
+    <div id="title">
+        <h2>Danggueni Shop</h2>
+    </div>
+
+    <div id="header-right-content">
+        <span id="header-right-content-button1">LOGIN </span>
+        <span> JOIN</span>
+    </div>
+</div>
+<table>
+    <thead>
+    <tr>
+        <td>ID</td>
+        <td>CODE</td>
+        <td>제품명</td>
+        <td>가격</td>
+        <td>재고수량</td>
+        <td>판매여부</td>
+        <td>편집</td>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="data : ${item}">
+        <td th:text="${data.id}"></td>
+        <td th:text="${data.code}"></td>
+        <td th:text="${data.name}"></td>
+        <td th:text="${data.price}"></td>
+        <td th:text="${data.stock}"></td>
+
+        <td th:if="${data.status == null}" th:text="'판매 대기'"></td>
+        <td th:unless="${data.status == null}" th:text="판매중"></td>
+        <td>
+            <a th:href="@{/manage/edit/{id} (id=${data.id}) }" th:text="수정"></a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
