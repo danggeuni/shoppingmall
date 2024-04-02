@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <title>Join</title>
 
     <style>
         .login-container {
@@ -20,7 +20,7 @@
             border-width: 0 0 1px;
         }
 
-        #login-button {
+        .login-button {
             width: 30%;
             height: 50px;
             background-color: #F6F7F9;
@@ -60,15 +60,16 @@
 </head>
 <body>
 
-<form id="login-wrapper" action="/user/login" method="post">
+<form id="login-wrapper" action="/user/join" method="post">
     <div class="login-container">
-    <input class="login-form" placeholder="아이디(이메일)" maxlength="30" name="email" required/>
-    <input class="login-form" placeholder="비밀번호" type="password" maxlength="20" name="password" required/>
-    <button type="submit" id="login-button">로그인</button>
-    <button type="button" id="join-button" th:onclick="|location.href='@{/user/join}'|">회원가입</button>
-        <div class="oauth-button">
-            <span class="oauth-button-text">네이버 로그인</span>
-        </div>
+        <input class="login-form" placeholder="아이디(이메일)" maxlength="30" type="email" name="email" required/>
+        <input class="login-form" placeholder="비밀번호" type="password" maxlength="20" name="password" required/>
+        <input class="login-form" placeholder="비밀번호 확인" type="password" maxlength="20" name="confirmPwd" required/>
+        <input class="login-form" placeholder="이름" maxlength="15" name="name" required/>
+        <input class="login-form" placeholder="전화번호" maxlength="13" name="phone" required/>
+        <input class="login-form" placeholder="주소" maxlength="100" name="address" required/>
+        <button type="submit" class="login-button">회원가입</button>
+        <button type="button" class="login-button" th:onclick="|location.href='@{/}'|">메인으로</button>
     </div>
 </form>
 

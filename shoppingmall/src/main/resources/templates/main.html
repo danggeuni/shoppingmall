@@ -22,7 +22,7 @@
             margin-bottom: 10px;
         }
 
-        #header-right-content {
+        .header-right-content {
             margin-right: 15px;
         }
 
@@ -30,7 +30,7 @@
             margin-left: 20px;
         }
 
-        #header-right-content-button1 {
+        .header-right-content-button1 {
             margin-right: 5px;
         }
 
@@ -47,9 +47,14 @@
         <h2>Danggueni Shop</h2>
     </div>
 
-    <div id="header-right-content">
-        <button id="header-right-content-button1" th:onclick="|location.href='@{/user/login}'|">LOGIN </button>
+    <div th:if="${userId} == null" class="header-right-content">
+        <button class="header-right-content-button1" th:onclick="|location.href='@{/user/login}'|">LOGIN </button>
         <button th:onclick="|location.href='@{/user/join}'|"> JOIN</button>
+    </div>
+
+    <div th:unless="${userId} == null" class="header-right-content">
+        <span class="header-right-content-button1" th:text="${userId} + '님'" > </span>
+        <button th:onclick="|location.href='@{/user/join}'|"> LOGOUT</button>
     </div>
 </div>
 <table>

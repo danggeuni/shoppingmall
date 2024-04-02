@@ -7,10 +7,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
+@SessionAttributes
 @RequestMapping("/")
 public class ItemController {
 
@@ -22,7 +27,11 @@ public class ItemController {
     }
 
     @GetMapping
-    public String mainView(Model model) {
+    public String mainView(Model model, HttpServletRequest request) {
+        // 로그인 시
+        HttpSession session = request.getSession();
+        model.addAttribute("userId",session.getAttribute("userId"));
+
         List<Item> item = itemService.showItems();
         model.addAttribute("item", item);
         return "main";
