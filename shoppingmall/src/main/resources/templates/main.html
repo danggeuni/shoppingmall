@@ -23,10 +23,14 @@
         }
 
         .header-right-content {
+            display: flex;
+            justify-content: right;
+            width: 45%;
             margin-right: 15px;
         }
 
         #title {
+            width: 50%;
             margin-left: 20px;
         }
 
@@ -48,15 +52,23 @@
     </div>
 
     <div th:if="${userId} == null" class="header-right-content">
-        <button class="header-right-content-button1" th:onclick="|location.href='@{/user/login}'|">LOGIN </button>
+        <button class="header-right-content-button1" th:onclick="|location.href='@{/user/login}'|">LOGIN</button>
         <button th:onclick="|location.href='@{/user/join}'|"> JOIN</button>
     </div>
 
     <div th:unless="${userId} == null" class="header-right-content">
-        <span class="header-right-content-button1" th:text="${userId} + '님'" > </span>
-        <button th:onclick="|location.href='@{/user/join}'|"> LOGOUT</button>
+        <span class="header-right-content-button1" th:text="${userId} + '님'"> </span>
+        <button th:onclick="|location.href='@{/user/logout}'|"> CART</button>
+        <button th:onclick="|location.href='@{/user/logout}'|"> INFO</button>
+        <button th:onclick="|location.href='@{/user/logout}'|"> LOGOUT</button>
+    </div>
+
+    <div th:if="${admin} == null"></div>
+    <div th:unless="${admin} == null">
+        <button th:onclick="|location.href='@{/manage}'|">MANAGE</button>
     </div>
 </div>
+
 <table>
     <thead>
     <tr>

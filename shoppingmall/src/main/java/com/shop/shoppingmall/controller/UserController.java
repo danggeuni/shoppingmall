@@ -51,4 +51,10 @@ public class UserController {
         userService.joinUser(dto);
         return "redirect:/user/login";
     }
+
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request) {
+        request.getSession().invalidate();
+        return "redirect:/";
+    }
 }

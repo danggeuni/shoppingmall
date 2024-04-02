@@ -38,6 +38,9 @@ public class ItemRepository {
     public void editItem(Long id, ItemEditDto dto) {
         jdbcTemplate.update("UPDATE ITEM SET CODE = ?, NAME = ?, PRICE = ?, STOCK = ?, STATUS = ? WHERE ID = ?", dto.getCode(), dto.getName(), dto.getPrice(), dto.getStock(), dto.getStatus(), id);
     }
+    public void deleteItem(Long id) {
+        jdbcTemplate.update("DELETE FROM ITEM WHERE ID = ?", id);
+    }
 
     RowMapper<Item> itemRowMapper () {
         return (rs, rowNum) -> new Item(
@@ -50,5 +53,4 @@ public class ItemRepository {
                 rs.getTimestamp("UPDATE_AT").toLocalDateTime(),
                 rs.getString("STATUS"));
     }
-
 }

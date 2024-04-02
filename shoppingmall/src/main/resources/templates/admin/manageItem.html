@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <style>
         table, tr, td, th{
             border: 1px solid black;
@@ -30,22 +31,54 @@
             margin-left: 20px;
         }
 
+        .header-right-content {
+            display: flex;
+            justify-content: right;
+            width: 45%;
+            margin-right: 15px;
+        }
+
         #header-right-content-button1 {
             margin-right: 5px;
+        }
+
+        .title {
+            cursor: pointer;
+        }
+
+        button {
+            border: 0;
+            background-color: transparent;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
 <div id="header">
     <div id="title">
-        <h2>Danggueni Shop</h2>
+        <h2 class="title" th:onclick="|location.href='@{/}'|">Danggueni Shop</h2>
     </div>
 
-    <div id="header-right-content">
-        <span id="header-right-content-button1">LOGIN </span>
-        <span> JOIN</span>
+    <div th:if="${userId} == null" class="header-right-content">
+        <button class="header-right-content-button1" th:onclick="|location.href='@{/user/login}'|">LOGIN</button>
+        <button th:onclick="|location.href='@{/user/join}'|"> JOIN</button>
+    </div>
+
+    <div th:unless="${userId} == null" class="header-right-content">
+        <span class="header-right-content-button1" th:text="${userId} + '님'"> </span>
+        <button th:onclick="|location.href='@{/user/logout}'|"> CART</button>
+        <button th:onclick="|location.href='@{/user/logout}'|"> INFO</button>
+        <button th:onclick="|location.href='@{/user/logout}'|"> LOGOUT</button>
+    </div>
+
+    <div th:if="${admin} == null"></div>
+    <div th:unless="${admin} == null">
+        <button th:onclick="|location.href='@{/manage}'|">MANAGE</button>
     </div>
 </div>
+
+<button th:onclick="|location.href='@{/manage/add}'|">물품추가</button>
+
 <table>
     <thead>
     <tr>
@@ -55,7 +88,8 @@
         <td>가격</td>
         <td>재고수량</td>
         <td>판매여부</td>
-        <td>편집</td>
+        <td>편집1</td>
+        <td>편집2</td>
     </tr>
     </thead>
 
@@ -72,8 +106,20 @@
         <td>
             <a th:href="@{/manage/edit/{id} (id=${data.id}) }" th:text="수정"></a>
         </td>
+        <td>
+            <form th:action="@{'/manage/delete/' + ${data.id}}" th:method="post">
+                <input type="hidden" name="_method" value="delete">
+                <button type="submit" th:text="삭제"></button>
+            </form>
+        </td>
     </tr>
     </tbody>
 </table>
 </body>
+
+<script th:inline="javascript">
+    const listReq = () => {
+        location.href = "/";
+    }
+</script>
 </html>

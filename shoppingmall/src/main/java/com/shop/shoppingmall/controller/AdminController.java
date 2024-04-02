@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@RequestMapping("/")
+@RequestMapping("/manage")
 public class AdminController {
     private final ItemService itemService;
 
@@ -21,22 +21,22 @@ public class AdminController {
         this.itemService = itemService;
     }
 
-    @GetMapping("/manage")
+    @GetMapping
     public String manageItem(Model model) {
         List<Item> item = itemService.manageItems();
         model.addAttribute("item", item);
-        return "manageItem";
+        return "admin/manageItem";
     }
 
-    @GetMapping("/manage/edit/{id}")
+    @GetMapping("/edit/{id}")
     public String editItem(Model model, @PathVariable Long id) {
         Item item = itemService.findById(id);
         model.addAttribute("item", new ItemEditDto(id, item.getCode(), item.getName(), item.getPrice(), item.getStock(), item.getStatus()));
 
-        return "editItem";
+        return "admin/editItem";
     }
 
-    @PostMapping("/manage/edit/{id}")
+    @PostMapping("/edit/{id}")
     public String editItem(@PathVariable Long id, @ModelAttribute ItemEditDto dto) {
         itemService.editItem(id, dto);
         return "redirect:/manage";
@@ -45,12 +45,18 @@ public class AdminController {
     @GetMapping("/add")
     public String addItem(Model model) {
         model.addAttribute("item", new ItemAddDto("", null, 0, 0, null));
-        return "addItem";
+        return "admin/addItem";
     }
 
     @PostMapping("/add")
     public String addItem(@ModelAttribute ItemAddDto add) {
         itemService.itemAdd(add);
-        return "redirect:/";
+        return "redirect:/manage";
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public String deleteItem(@PathVariable Long id) {
+        itemService.deleteItem(id);
+        return "redirect:/manage";
     }
 }

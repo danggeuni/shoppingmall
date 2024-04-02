@@ -28,9 +28,17 @@ public class ItemController {
 
     @GetMapping
     public String mainView(Model model, HttpServletRequest request) {
-        // 로그인 시
+        // 로그인 시 admin 권한 확인
         HttpSession session = request.getSession();
-        model.addAttribute("userId",session.getAttribute("userId"));
+
+        if (session.getAttribute("userId") != null) {
+            if (session.getAttribute("userId").toString().equals("admin")) {
+                model.addAttribute("admin", "admin");
+                model.addAttribute("userId", session.getAttribute("userId"));
+            } else {
+                model.addAttribute("userId", session.getAttribute("userId"));
+            }
+        }
 
         List<Item> item = itemService.showItems();
         model.addAttribute("item", item);
