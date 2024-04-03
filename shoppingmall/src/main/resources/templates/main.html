@@ -57,9 +57,9 @@
     </div>
 
     <div th:unless="${userId} == null" class="header-right-content">
-        <span class="header-right-content-button1" th:text="${userId} + '님'"> </span>
-        <button th:onclick="|location.href='@{/user/logout}'|"> CART</button>
-        <button th:onclick="|location.href='@{/user/logout}'|"> INFO</button>
+        <span class="header-right-content-button1" th:text="${userName} + '님'"> </span>
+        <button th:onclick="|location.href='@{/user/cart}'|"> CART</button>
+        <button th:onclick="|location.href='@{/user/info}'|"> INFO</button>
         <button th:onclick="|location.href='@{/user/logout}'|"> LOGOUT</button>
     </div>
 

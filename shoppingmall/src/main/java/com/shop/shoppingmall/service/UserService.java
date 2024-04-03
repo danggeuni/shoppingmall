@@ -1,5 +1,6 @@
 package com.shop.shoppingmall.service;
 
+import com.shop.shoppingmall.controller.dto.UserDto.UserEditDto;
 import com.shop.shoppingmall.controller.dto.UserDto.UserJoinDto;
 import com.shop.shoppingmall.controller.dto.UserDto.UserLoginDto;
 import com.shop.shoppingmall.domain.entity.UserEntity;
@@ -47,5 +48,15 @@ public class UserService {
         Encryption encryption = new Encryption();
         String encryptPwd = encryption.getEncrypt(dto.getPassword(), encryption.salt);
         userRepository.joinUser(new UserEntity(dto.getEmail(), encryptPwd, dto.getName(), dto.getPhone(), dto.getAddress()));
+    }
+
+    public UserEntity findById(String id) {
+        return userRepository.findById(id);
+    }
+
+    public void editUser(UserEditDto dto, String id) {
+        Encryption encryption = new Encryption();
+        String encryptPwd = encryption.getEncrypt(dto.getPassword(), encryption.salt);
+        userRepository.editUser(new UserEditDto(dto.getName(), encryptPwd, dto.getPhone(), dto.getAddress()), id);
     }
 }

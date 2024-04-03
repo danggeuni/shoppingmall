@@ -1,5 +1,6 @@
 package com.shop.shoppingmall.controller;
 
+import com.shop.shoppingmall.controller.dto.UserDto.UserEditDto;
 import com.shop.shoppingmall.controller.dto.UserDto.UserJoinDto;
 import com.shop.shoppingmall.controller.dto.UserDto.UserLoginDto;
 import com.shop.shoppingmall.domain.entity.UserEntity;
@@ -7,10 +8,7 @@ import com.shop.shoppingmall.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -36,14 +34,15 @@ public class UserController {
         UserEntity entity = userService.login(userLoginDto);
 
         HttpSession session = request.getSession();
-        session.setAttribute("userId", entity.getName());
+        session.setAttribute("userName", entity.getName());
+        session.setAttribute("userId", entity.getEmail());
         return "redirect:/";
     }
 
     @GetMapping("/join")
     public String join(Model model) {
         model.addAttribute("data", new UserJoinDto(null, null, null, null, null, null));
-        return "/user/join";
+        return "user/join";
     }
 
     @PostMapping("/join")
@@ -56,5 +55,35 @@ public class UserController {
     public String logout(HttpServletRequest request) {
         request.getSession().invalidate();
         return "redirect:/";
+    }
+
+    @GetMapping("/info")
+    public String userInfo(Model model, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        String id = (String) session.getAttribute("userId");
+        UserEntity entity = userService.findById(id);
+
+        model.addAttribute("data", entity);
+        return "user/info";
+    }
+
+    @GetMapping("/edit")
+    public String userEdit(Model model, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        String id = (String) session.getAttribute("userId");
+        UserEntity entity = userService.findById(id);
+
+        model.addAttribute("data", entity);
+        model.addAttribute("edit", new UserEditDto(null, null, null, null));
+        return "user/edit";
+    }
+
+    @PutMapping("/edit")
+    public String userEdit(HttpServletRequest request, @ModelAttribute UserEditDto dto) {
+        HttpSession session = request.getSession();
+        String id = (String) session.getAttribute("userId");
+        userService.editUser(dto, id);
+
+        return "redirect:/user/info";
     }
 }

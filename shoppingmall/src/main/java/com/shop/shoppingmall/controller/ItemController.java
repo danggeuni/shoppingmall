@@ -31,12 +31,14 @@ public class ItemController {
         // 로그인 시 admin 권한 확인
         HttpSession session = request.getSession();
 
-        if (session.getAttribute("userId") != null) {
-            if (session.getAttribute("userId").toString().equals("admin")) {
+        if (session.getAttribute("userName") != null) {
+            if (session.getAttribute("userId").toString().equals("admin@admin")) {
                 model.addAttribute("admin", "admin");
                 model.addAttribute("userId", session.getAttribute("userId"));
+                model.addAttribute("userName", session.getAttribute("userName"));
             } else {
                 model.addAttribute("userId", session.getAttribute("userId"));
+                model.addAttribute("userName", session.getAttribute("userName"));
             }
         }
 

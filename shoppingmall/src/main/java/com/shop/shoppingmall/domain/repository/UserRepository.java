@@ -1,5 +1,6 @@
 package com.shop.shoppingmall.domain.repository;
 
+import com.shop.shoppingmall.controller.dto.UserDto.UserEditDto;
 import com.shop.shoppingmall.domain.entity.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -27,6 +28,10 @@ public class UserRepository {
 
     public void joinUser(UserEntity userEntity) {
         jdbcTemplate.update("INSERT INTO USER (EMAIL, PASSWORD, NAME, PHONE, ADDRESS) VALUES (?, ?, ?, ?, ?)", userEntity.getEmail(), userEntity.getPassword(), userEntity.getName(), userEntity.getPhone(), userEntity.getAddress());
+    }
+
+    public void editUser(UserEditDto dto, String id) {
+        jdbcTemplate.update("UPDATE USER SET PASSWORD = ?, NAME = ?, PHONE = ?, ADDRESS = ? WHERE EMAIL = ?", dto.getPassword(), dto.getName(), dto.getPhone(), dto.getAddress(), id);
     }
 
     RowMapper<UserEntity> userLoginDtoRowMapper() {

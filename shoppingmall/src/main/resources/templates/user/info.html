@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Info</title>
+</head>
+<style>
+    .login-container {
+        width: 100%;
+        height: 600px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .login-form {
+        width: 30%;
+        height: 50px;
+        border-width: 0 0 1px;
+    }
+
+    .login-button {
+        width: 30%;
+        height: 50px;
+        background-color: #F6F7F9;
+        border: 0;
+
+        margin-top: 10px;
+    }
+
+    #join-button {
+        width: 30%;
+        height: 50px;
+        background-color: #F6F7F9;
+        border: 0;
+
+        margin-top: 5px;
+        margin-bottom: 20px;
+    }
+
+    .oauth-button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        width: 30%;
+        height: 50px;
+        background-color: #04DC63;
+        border: 0;
+    }
+
+    .oauth-button-text {
+        color: white;
+        font-weight: 600;
+
+        cursor: pointer;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="login-container">
+    <div>
+        <span>EMAIL : </span>
+        <span class="login-form" th:text="${data.email}"></span>
+    </div>
+
+    <div>
+        <span>NAME : </span>
+        <span class="login-form" th:text="${data.name}"></span>
+    </div>
+
+    <div>
+        <span>PHONE : </span>
+        <span class="login-form" th:text="${data.phone}"></span>
+    </div>
+
+    <div>
+        <span>ADDRESS : </span>
+        <span class="login-form" th:text="${data.address}"></span>
+    </div>
+    <button type="button" class="login-button" th:onclick="|location.href='@{/}'|">메인으로</button>
+    <button type="button" class="login-button" th:onclick="|location.href='@{/user/edit}'|">수정하기</button>
+</div>
+
+</body>
+</html>
