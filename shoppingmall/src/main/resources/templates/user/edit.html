@@ -15,18 +15,19 @@
     }
 
     .login-form {
-        width: 30%;
+        width: 80%;
         height: 50px;
         border-width: 0 0 1px;
     }
 
     .login-button {
-        width: 30%;
+        width: 50%;
         height: 50px;
         background-color: #F6F7F9;
         border: 0;
 
         margin-top: 10px;
+        margin-right: 10px;
     }
 
     #join-button {
@@ -56,6 +57,32 @@
 
         cursor: pointer;
     }
+
+    .form-wrapper {
+        width: 100%;
+        display:flex;
+        justify-content: center;
+    }
+
+    .each-wrapper {
+        width: 550px;
+    }
+
+    .delete-button {
+        width: 50%;
+        height: 50px;
+        background-color: #F6F7F9;
+        border: 0;
+
+        margin-top: 10px;
+    }
+
+    .button-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: row;
+    }
 </style>
 </head>
 
@@ -63,36 +90,41 @@
 
 
 <div class="login-container">
-    <form action="/user/edit" method="post">
-        <input type="hidden" name="_method" value="put">
-        <div>
-            <span>EMAIL : </span>
-            <span class="login-form" th:text="${data.email}"></span>
-        </div>
+    <div class="form-wrapper">
+        <form action="/user/edit" method="post">
+            <input type="hidden" name="_method" value="put">
+            <div class="each-wrapper">
+                <span>EMAIL : </span>
+                <span class="login-form" th:text="${data.email}"></span>
+            </div>
 
-        <div>
-            <span>PASSWORD : </span>
-            <input type="password" class="login-form" name="password"/>
-        </div>
+            <div>
+                <span>PASSWORD : </span>
+                <input type="password" class="login-form" name="password" required/>
+            </div>
 
-        <div>
-            <span>NAME : </span>
-            <input class="login-form" th:value="${data.name}" name="name"/>
-        </div>
+            <div>
+                <span>NAME : </span>
+                <input class="login-form" th:value="${data.name}" name="name"/>
+            </div>
 
-        <div>
-            <span>PHONE : </span>
-            <input class="login-form" th:value="${data.phone}" name="phone"/>
-        </div>
+            <div>
+                <span>PHONE : </span>
+                <input class="login-form" th:value="${data.phone}" name="phone"/>
+            </div>
 
-        <div>
-            <span>ADDRESS : </span>
-            <input class="login-form" th:value="${data.address}" name="address"/>
-        </div>
-        <button type="button" class="login-button" th:onclick="|location.href='@{/}'|">메인으로</button>
-        <button type="submit" class="login-button">수정하기</button>
-        <button class="login-button">회원탈퇴</button>
-    </form>
+            <div>
+                <span>ADDRESS : </span>
+                <input class="login-form" th:value="${data.address}" name="address"/>
+            </div>
+
+            <div class="button-wrapper">
+                <button type="submit" class="login-button">수정하기</button>
+                <button type="button" class="login-button" th:onclick="|location.href='@{/}'|">메인으로</button>
+            </div>
+        </form>
+    </div>
+    <button type="button" class="delete-button">회원탈퇴</button>
 </div>
 
 

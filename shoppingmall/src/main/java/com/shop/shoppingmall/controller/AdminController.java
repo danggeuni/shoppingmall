@@ -1,7 +1,7 @@
 package com.shop.shoppingmall.controller;
 
-import com.shop.shoppingmall.controller.dto.ItemAddDto;
-import com.shop.shoppingmall.controller.dto.ItemEditDto;
+import com.shop.shoppingmall.controller.dto.adminDto.ItemAddDto;
+import com.shop.shoppingmall.controller.dto.adminDto.ItemEditDto;
 import com.shop.shoppingmall.domain.entity.Item;
 import com.shop.shoppingmall.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;

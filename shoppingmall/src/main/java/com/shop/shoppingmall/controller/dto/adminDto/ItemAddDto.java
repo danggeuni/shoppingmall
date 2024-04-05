@@ -1,4 +1,4 @@
-package com.shop.shoppingmall.controller.dto;
+package com.shop.shoppingmall.controller.dto.adminDto;
 
 import com.shop.shoppingmall.domain.entity.Item;
 import lombok.Getter;

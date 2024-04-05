@@ -1,4 +1,4 @@
-package com.shop.shoppingmall.controller.dto;
+package com.shop.shoppingmall.controller.dto.adminDto;
 
 import lombok.Getter;
 

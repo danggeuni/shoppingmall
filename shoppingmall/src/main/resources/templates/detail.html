@@ -15,6 +15,9 @@
         }
 
         #header-right-content {
+            display: flex;
+            justify-content: right;
+            width: 45%;
             margin-right: 15px;
         }
 
@@ -95,16 +98,38 @@
             cursor: pointer;
         }
 
+        .header-right-content-button1 {
+            margin-right: 5px;
+        }
+
+        button {
+            border: 0;
+            background-color: transparent;
+            cursor: pointer;
+        }
+
+        span {
+            user-select: none;
+        }
     </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 <div id="header">
     <div id="title">
         <h2 onclick="listReq()">Danggueni Shop</h2>
     </div>
-    <div id="header-right-content">
-        <span id="header-right-content-button1">LOGIN </span>
-        <span> JOIN</span>
+
+    <div th:if="${userName} == null" class="header-right-content">
+        <button class="header-right-content-button1" th:onclick="|location.href='@{/user/login}'|">LOGIN</button>
+        <button th:onclick="|location.href='@{/user/join}'|"> JOIN</button>
+    </div>
+
+    <div th:unless="${userName} == null" class="header-right-content">
+        <span class="header-right-content-button1" th:text="${userName} + '님'"> </span>
+        <button th:onclick="|location.href='@{/user/cart}'|"> CART</button>
+        <button th:onclick="|location.href='@{/user/info}'|"> INFO</button>
+        <button th:onclick="|location.href='@{/user/logout}'|"> LOGOUT</button>
     </div>
 </div>
 <div id="content-body">
@@ -128,7 +153,7 @@
         <div class="space"></div>
         <div class="button-wrapper">
             <div class="buy-button-wrapper"><span class="buy-button">BUY IT NOW</span></div>
-            <div class="cart-button-wrapper"><span class="cart-button">ADD TO CART</span></div>
+            <div class="cart-button-wrapper" th:onclick="addCart([[${item.id}]])"><span class="cart-button">ADD TO CART</span></div>
         </div>
     </div>
 </div>
@@ -138,5 +163,24 @@
     const listReq = () => {
         location.href = "/";
     }
+
+    const addCart = (itemId) => {
+    if (confirm("장바구니에 상품을 추가하시겠습니까?")) {
+        $.ajax({
+            type: "POST",
+            url: "/item/cart/" + itemId,
+            success: function(data) {
+                console.log(data);
+            },
+            error: function(xhr, status, error) {
+                console.error("POST 요청이 실패했습니다.");
+                console.error("상태 코드:", xhr.status);
+                console.error("에러 내용:", error);
+            }
+        });
+    } else {
+        console.log("사용자가 취소를 선택했습니다.");
+    }
+}
 </script>
 </html>

@@ -1,6 +1,6 @@
 package com.shop.shoppingmall.domain.repository;
 
-import com.shop.shoppingmall.controller.dto.ItemEditDto;
+import com.shop.shoppingmall.controller.dto.adminDto.ItemEditDto;
 import com.shop.shoppingmall.domain.entity.Item;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -53,4 +53,5 @@ public class ItemRepository {
                 rs.getTimestamp("UPDATE_AT").toLocalDateTime(),
                 rs.getString("STATUS"));
     }
+
 }

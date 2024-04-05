@@ -1,6 +1,6 @@
 package com.shop.shoppingmall.domain.repository;
 
-import com.shop.shoppingmall.controller.dto.UserDto.UserEditDto;
+import com.shop.shoppingmall.controller.dto.userDto.UserEditDto;
 import com.shop.shoppingmall.domain.entity.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;

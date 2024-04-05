@@ -1,11 +1,13 @@
 package com.shop.shoppingmall.controller;
 
-import com.shop.shoppingmall.controller.dto.UserDto.UserEditDto;
-import com.shop.shoppingmall.controller.dto.UserDto.UserJoinDto;
-import com.shop.shoppingmall.controller.dto.UserDto.UserLoginDto;
+import com.shop.shoppingmall.controller.dto.userDto.UserEditDto;
+import com.shop.shoppingmall.controller.dto.userDto.UserJoinDto;
+import com.shop.shoppingmall.controller.dto.userDto.UserLoginDto;
 import com.shop.shoppingmall.domain.entity.UserEntity;
 import com.shop.shoppingmall.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -85,5 +87,11 @@ public class UserController {
         userService.editUser(dto, id);
 
         return "redirect:/user/info";
+    }
+
+    @DeleteMapping("cart/delete/{id}")
+    public ResponseEntity<String> cartListDelete(@PathVariable Long id) {
+        System.out.println("일단 여기까지 오면 성공!");
+        return ResponseEntity.ok(id + "has been successfully deleted");
     }
 }

@@ -1,4 +1,4 @@
-package com.shop.shoppingmall.controller.dto.UserDto;
+package com.shop.shoppingmall.controller.dto.userDto;
 
 import lombok.Getter;
 

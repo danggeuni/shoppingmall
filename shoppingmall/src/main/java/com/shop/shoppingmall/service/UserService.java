@@ -1,8 +1,8 @@
 package com.shop.shoppingmall.service;
 
-import com.shop.shoppingmall.controller.dto.UserDto.UserEditDto;
-import com.shop.shoppingmall.controller.dto.UserDto.UserJoinDto;
-import com.shop.shoppingmall.controller.dto.UserDto.UserLoginDto;
+import com.shop.shoppingmall.controller.dto.userDto.UserEditDto;
+import com.shop.shoppingmall.controller.dto.userDto.UserJoinDto;
+import com.shop.shoppingmall.controller.dto.userDto.UserLoginDto;
 import com.shop.shoppingmall.domain.entity.UserEntity;
 import com.shop.shoppingmall.domain.repository.UserRepository;
 import com.shop.shoppingmall.utils.Encryption;
