@@ -23,7 +23,6 @@ public class ItemController {
 
     private final ItemService itemService;
     private final CartService cartService;
-    private HttpSession session;
 
     @Autowired
     public ItemController(ItemService itemService, CartService cartService) {
@@ -33,6 +32,7 @@ public class ItemController {
 
     @GetMapping
     public String mainView(Model model, HttpServletRequest request) {
+        HttpSession session;
         // 로그인 시 admin 권한 확인
         session = request.getSession();
 
@@ -54,6 +54,7 @@ public class ItemController {
 
     @GetMapping("/item/{id}")
     public String detail(Model model, @PathVariable Long id, HttpServletRequest request) {
+        HttpSession session;
         session = request.getSession();
 
         ItemDetailDto item = itemService.showItem(id);
@@ -64,6 +65,7 @@ public class ItemController {
 
     @PostMapping("/item/cart/{id}")
     public String addCart(@PathVariable Long id) {
+        HttpSession session = null;
         String email = (String) session.getAttribute("userId");
         itemService.addCart(email, id);
         return "redirect:/item/{id}";
@@ -71,6 +73,7 @@ public class ItemController {
 
     @GetMapping("/user/cart")
     public String getCart(Model model) {
+        HttpSession session = null;
         String email = (String) session.getAttribute("userId");
         List<CartEntity> item = cartService.viewCartList(email);
 
