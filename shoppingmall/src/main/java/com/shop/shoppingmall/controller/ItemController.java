@@ -1,5 +1,6 @@
 package com.shop.shoppingmall.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.shop.shoppingmall.controller.dto.ItemDetailDto;
 import com.shop.shoppingmall.domain.entity.CartEntity;
 import com.shop.shoppingmall.domain.entity.Item;
@@ -64,16 +65,14 @@ public class ItemController {
     }
 
     @PostMapping("/item/cart/{id}")
-    public String addCart(@PathVariable Long id) {
-        HttpSession session = null;
+    public String addCart(@PathVariable Long id, HttpSession session) {
         String email = (String) session.getAttribute("userId");
         itemService.addCart(email, id);
         return "redirect:/item/{id}";
     }
 
     @GetMapping("/user/cart")
-    public String getCart(Model model) {
-        HttpSession session = null;
+    public String getCart(Model model, HttpSession session) throws JsonProcessingException {
         String email = (String) session.getAttribute("userId");
         List<CartEntity> item = cartService.viewCartList(email);
 

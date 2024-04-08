@@ -1,13 +1,17 @@
 package com.shop.shoppingmall.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Getter;
 
 @Getter
 public class CartEntity {
-    private final Long id;
-    private final String email;
-    private final String name;
-    private final int price;
+    private Long id;
+    private String email;
+    private String name;
+    private int price;
+
+    public CartEntity() {
+    }
 
     public CartEntity(Long id, String email, String name, int price) {
         this.id = id;
