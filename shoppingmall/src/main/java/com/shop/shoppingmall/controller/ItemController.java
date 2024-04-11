@@ -2,12 +2,20 @@ package com.shop.shoppingmall.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.shop.shoppingmall.controller.dto.ItemDetailDto;
+import com.shop.shoppingmall.controller.dto.adminDto.ItemEditDto;
+import com.shop.shoppingmall.controller.dto.orderDto.Delivery;
+import com.shop.shoppingmall.controller.dto.orderDto.SingleItem;
 import com.shop.shoppingmall.domain.entity.CartEntity;
 import com.shop.shoppingmall.domain.entity.Item;
+import com.shop.shoppingmall.domain.entity.OrderEntity;
+import com.shop.shoppingmall.domain.entity.UserEntity;
 import com.shop.shoppingmall.service.CartService;
 import com.shop.shoppingmall.service.ItemService;
+import com.shop.shoppingmall.service.OrderService;
+import com.shop.shoppingmall.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -24,11 +32,15 @@ public class ItemController {
 
     private final ItemService itemService;
     private final CartService cartService;
+    private final OrderService orderService;
+    private final UserService userService;
 
     @Autowired
-    public ItemController(ItemService itemService, CartService cartService) {
+    public ItemController(ItemService itemService, CartService cartService, OrderService orderService, UserService userService) {
         this.itemService = itemService;
         this.cartService = cartService;
+        this.orderService = orderService;
+        this.userService = userService;
     }
 
     @GetMapping
@@ -95,14 +107,69 @@ public class ItemController {
         return "item/cart";
     }
 
-    @GetMapping("/item/order/{id}")
-    public String orderItem(Model model) {
-        return "order";
+    @GetMapping("/item/order")
+    public String orderItem(Model model, HttpSession session, @RequestParam(required = false) Integer amount, @RequestParam(required = false) Long itemId) throws JsonProcessingException {
+        String email = (String) session.getAttribute("userId");
+        UserEntity entity = userService.findById(email);
+
+        int totalPrice = 0;
+        int totalQty = 0;
+
+        if (amount != null) {
+            Item itemInfo = itemService.findById(itemId);
+            SingleItem item = new SingleItem(itemInfo.getId(), email, itemInfo.getId(), itemInfo.getName(), itemInfo.getPrice(), itemInfo.getStock(), amount);
+            model.addAttribute("item", item);
+            model.addAttribute("totalPrice", item.getPrice() * amount);
+            model.addAttribute("totalQty", amount);
+        } else {
+            List<CartEntity> item = cartService.viewCartList(email);
+            for (CartEntity cartEntity : item) {
+                totalPrice = totalPrice + (cartEntity.getPrice() * cartEntity.getCount());
+                totalQty = totalQty + cartEntity.getCount();
+            }
+            model.addAttribute("item", item);
+            model.addAttribute("totalPrice", totalPrice);
+            model.addAttribute("totalQty", totalQty);
+        }
+
+        model.addAttribute("userId", session.getAttribute("userId"));
+        model.addAttribute("userName", session.getAttribute("userName"));
+        model.addAttribute("user", entity);
+
+        return "item/order";
     }
 
+    @Transactional
     @PostMapping("/item/order/")
-    public void orderItem() {
+    public String orderItem(HttpSession session, Delivery delivery) throws JsonProcessingException {
+        List<CartEntity> entity = cartService.viewCartList(session.getAttribute("userId").toString());
+        UserEntity user = userService.findById(session.getAttribute("userId").toString());
 
+        int totalPrice = 0;
+        int totalQty = 0;
+
+        for (CartEntity cartEntity : entity) {
+            totalPrice = totalPrice + (cartEntity.getPrice() * cartEntity.getCount());
+            totalQty = totalQty + cartEntity.getCount();
+        }
+
+        orderService.addOrder(user, totalPrice);
+        OrderEntity order = orderService.findLastOrder();
+
+        for (CartEntity e : entity) {
+            if (e.getStock() == 0 || e.getStock() < e.getCount()) {
+                return "redirect:/";
+            }
+            // 아이템 개별 추가
+            orderService.addOrderItem(order.getId(), e, totalPrice);
+
+            // 아이템 stock 수량 수정
+            Item item = itemService.findById(e.getItemId());
+            itemService.editItem(e.getItemId(), new ItemEditDto(item.getId(), item.getItemCode(), item.getName(), item.getPrice(), item.getStock() - e.getCount(), item.getStatus()));
+            cartService.deleteCartItem(e.getId(), user.getEmail());
+        }
+        orderService.addDelivery(user, order.getId(), delivery);
+
+        return "redirect:/user/cart";
     }
-
 }

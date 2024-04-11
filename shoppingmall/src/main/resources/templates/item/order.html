@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Order</title>
+    <div th:replace="/fragments/head.html :: fragment-head"></div>
+</head>
+<style>
+    .user-info-table{
+        margin-bottom: 5%;
+    }
+
+    table {
+        width: 50%;
+    }
+
+    .totalQty, .totalPrice {
+        margin-top: 30px;
+        width: 300px;
+        height: 80px;
+        font-size: 20px;
+        font-weight: 600;
+        border: 2px solid;
+    }
+
+    .order-button{
+        font-size: 20px;
+        color: tomato;
+    }
+
+    input{
+        width: 400px;
+    }
+</style>
+<body>
+<div th:replace="/fragments/header.html :: fragment-header"></div>
+
+<form method="post" action="/item/order/">
+    <table class="user-info-table">
+        <tr>
+            <td>주문자 이름</td>
+            <td><input th:value="${user.name}" name="orderName"/></td>
+        </tr>
+        <tr>
+            <td>핸드폰번호</td>
+            <td><input th:value="${user.phone}" name="orderPhone"/></td>
+        </tr>
+        <tr>
+            <td>주소</td>
+            <td><input th:value="${user.address}" name="orderAddress"/></td>
+        </tr>
+
+        <tr>
+            <td>배송 요청 사항</td>
+            <td><input th:value="${'부재 시 경비실에 맡겨주세요.'}" name="orderRequest"/></td>
+        </tr>
+    </table>
+
+
+    <table class="cart-container">
+        <thead>
+        <tr>
+            <td>ID</td>
+            <td>제품명</td>
+            <td>가격</td>
+            <td>수량</td>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="data : ${item}">
+            <td th:text="${data.id}"></td>
+            <td th:text="${data.name}"></td>
+            <td th:text="${data.price}"></td>
+            <td th:text="${data.count}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="totalPrice">
+        <div>총 금액</div>
+        <div th:text="${totalPrice} + ' 원'"></div>
+        <button class="order-button" type="submit">구매하기</button>
+    </div>
+</form>
+</body>
+</html>

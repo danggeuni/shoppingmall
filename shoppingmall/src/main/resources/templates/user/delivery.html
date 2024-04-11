@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Delivery</title>
+    <div th:replace="/fragments/head.html :: fragment-head"></div>
+</head>
+<body>
+<div th:replace="/fragments/header.html :: fragment-header"></div>
+
+<table th:if="${data} != null">
+    <thead>
+    <tr>
+        <td>받으시는 분</td>
+        <td>연락처</td>
+        <td>주 소</td>
+        <td>메 모</td>
+        <td>제품정보</td>
+        <td>배송 상태</td>
+    </tr>
+    </thead>
+
+    <tbody th:each="item : ${data}">
+    <tr>
+        <td th:text="${item.delName}"></td>
+        <td th:text="${item.delPhone}"></td>
+        <td th:text="${item.delAddress}"></td>
+        <td th:text="${item.memo}"></td>
+        <td th:text="${item.orderNo}"></td>
+        <td th:text="${item.status}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<table th:unless="${data} != null">
+    <thead>
+    <tr>
+        <td>받으시는 분</td>
+        <td>연락처</td>
+        <td>주 소</td>
+        <td>메 모</td>
+        <td>배송 상태</td>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr>
+        <td>배송할 정보가 없습니다.</td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

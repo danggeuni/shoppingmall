@@ -146,13 +146,16 @@
             </div>
         </div>
         <div class="space"></div>
-        <div class="buy-button-wrapper" th:onclick="buyItem([[${item.id}]])"><span class="buy-button">BUY IT NOW</span>
-        </div>
+        <form method="get" th:action="@{/item/order}">
+            <input class="form-control" name="amount" type="number" value="1"/>
+            <input class="form-control" name="itemId" type="hidden" th:value="${item.id}"/>
+            <button class="buy-button-wrapper" type="submit">BUY IT NOW</button>
+        </form>
+
         <form method="post" th:action="@{/item/cart/{id}(id=${item.id})}">
             <div>
                 <input id="amount" class="form-control" name="amount" type="number" value="1"/>
                 <button class="cart-button-wrapper" type="submit">ADD TO CART</button>
-                </div>
             </div>
         </form>
     </div>

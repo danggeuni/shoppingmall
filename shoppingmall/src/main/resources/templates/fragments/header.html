@@ -13,6 +13,7 @@
     <div th:unless="${userId} == null" class="header-right-content">
         <span class="header-right-content-button1" th:text="${userName} + '님'"> </span>
         <button th:onclick="|location.href='@{/user/cart}'|"> CART</button>
+        <button th:onclick="|location.href='@{/user/delivery}'|"> 배송조회</button>
         <button th:onclick="|location.href='@{/user/info}'|"> INFO</button>
         <button th:onclick="|location.href='@{/user/logout}'|"> LOGOUT</button>
     </div>

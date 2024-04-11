@@ -4,11 +4,11 @@ import lombok.Getter;
 
 @Getter
 public class UserEntity {
-    private final String email;
-    private final String password;
-    private final String name;
-    private final String phone;
-    private final String address;
+    private String email;
+    private String password;
+    private String name;
+    private String phone;
+    private String address;
 
     public UserEntity(String email, String password, String name, String phone, String address) {
         this.email = email;

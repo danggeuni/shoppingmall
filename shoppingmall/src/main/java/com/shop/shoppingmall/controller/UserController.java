@@ -4,8 +4,10 @@ import com.shop.shoppingmall.controller.dto.userDto.UserEditDto;
 import com.shop.shoppingmall.controller.dto.userDto.UserJoinDto;
 import com.shop.shoppingmall.controller.dto.userDto.UserLoginDto;
 import com.shop.shoppingmall.domain.entity.CartEntity;
+import com.shop.shoppingmall.domain.entity.DeliveryEntity;
 import com.shop.shoppingmall.domain.entity.UserEntity;
 import com.shop.shoppingmall.service.CartService;
+import com.shop.shoppingmall.service.OrderService;
 import com.shop.shoppingmall.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,17 +17,20 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Controller
 @RequestMapping("/user")
 public class UserController {
     private final UserService userService;
     private final CartService cartService;
+    private final OrderService orderService;
 
     @Autowired
-    public UserController(UserService userService, CartService cartService) {
+    public UserController(UserService userService, CartService cartService, OrderService orderService) {
         this.userService = userService;
         this.cartService = cartService;
+        this.orderService = orderService;
     }
 
     @GetMapping("/login")
@@ -97,5 +102,15 @@ public class UserController {
         String email = session.getAttribute("userId").toString();
         cartService.deleteCartItem(id, email);
         return  ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/delivery")
+    public String showDeliveryStatus(Model model, HttpSession session) {
+        List<DeliveryEntity> data = orderService.findByEmail(session.getAttribute("userId").toString());
+        model.addAttribute("data", data);
+        model.addAttribute("userId", session.getAttribute("userId"));
+        model.addAttribute("userName", session.getAttribute("userName"));
+
+        return "user/delivery";
     }
 }

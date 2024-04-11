@@ -59,6 +59,11 @@
 
             border: 2px solid;
         }
+
+        .order-button{
+            font-size: 20px;
+            color: tomato;
+        }
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
@@ -99,7 +104,7 @@
 <div class="totalPrice">
     <div>총 금액</div>
     <div th:text="${totalPrice} + ' 원'"></div>
-    <button>전체구매</button>
+    <button class="order-button" th:onclick="|location.href='@{/item/order}'|">전체구매</button>
 </div>
 </body>
 
