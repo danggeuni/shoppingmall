@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <div th:replace="/fragments/head.html :: fragment-head"></div>
     <style>
         table, tr, td, th{
             border: 1px solid black;
@@ -54,28 +55,7 @@
     </style>
 </head>
 <body>
-<div id="header">
-    <div id="title">
-        <h2 class="title" th:onclick="|location.href='@{/}'|">Danggueni Shop</h2>
-    </div>
-
-    <div th:if="${userId} == null" class="header-right-content">
-        <button class="header-right-content-button1" th:onclick="|location.href='@{/user/login}'|">LOGIN</button>
-        <button th:onclick="|location.href='@{/user/join}'|"> JOIN</button>
-    </div>
-
-    <div th:unless="${userId} == null" class="header-right-content">
-        <span class="header-right-content-button1" th:text="${userId} + '님'"> </span>
-        <button th:onclick="|location.href='@{/user/logout}'|"> CART</button>
-        <button th:onclick="|location.href='@{/user/logout}'|"> INFO</button>
-        <button th:onclick="|location.href='@{/user/logout}'|"> LOGOUT</button>
-    </div>
-
-    <div th:if="${admin} == null"></div>
-    <div th:unless="${admin} == null">
-        <button th:onclick="|location.href='@{/manage}'|">MANAGE</button>
-    </div>
-</div>
+<div th:replace="/fragments/header.html :: fragment-header"></div>
 
 <button th:onclick="|location.href='@{/manage/add}'|">물품추가</button>
 
@@ -96,7 +76,7 @@
     <tbody>
     <tr th:each="data : ${item}">
         <td th:text="${data.id}"></td>
-        <td th:text="${data.code}"></td>
+        <td th:text="${data.itemCode}"></td>
         <td th:text="${data.name}"></td>
         <td th:text="${data.price}"></td>
         <td th:text="${data.stock}"></td>

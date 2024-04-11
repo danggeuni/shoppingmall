@@ -1,94 +1,52 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <div th:replace="/fragments/head.html :: fragment-head"></div>
     <style>
-        table, tr, td, th{
-            border: 1px solid black;
-        }
-
-        th, td {
-            padding : 10px;
-        }
-
-        #header {
+        img {
             width: 100%;
-            background-color: #E6E1DC;
+            height: 100%;
+        }
+
+        .item-desc {
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
+            justify-content: center;
             align-items: center;
-
-            margin-bottom: 10px;
         }
 
-        .header-right-content {
+        .item-wrapper {
+            width: 30%;
+            flex-basis: 30%;
+        }
+
+        span {
+            font-weight: 600;
+        }
+
+        .item-container {
             display: flex;
-            justify-content: right;
-            width: 45%;
-            margin-right: 15px;
-        }
-
-        #title {
-            width: 50%;
-            margin-left: 20px;
-        }
-
-        .header-right-content-button1 {
-            margin-right: 5px;
-        }
-
-        button {
-            border: 0;
-            background-color: transparent;
-            cursor: pointer;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: space-around;
         }
     </style>
 </head>
 <body>
-<div id="header">
-    <div id="title">
-        <h2>Danggueni Shop</h2>
-    </div>
+<div th:replace="/fragments/header.html :: fragment-header"></div>
 
-    <div th:if="${userId} == null" class="header-right-content">
-        <button class="header-right-content-button1" th:onclick="|location.href='@{/user/login}'|">LOGIN</button>
-        <button th:onclick="|location.href='@{/user/join}'|"> JOIN</button>
-    </div>
-
-    <div th:unless="${userId} == null" class="header-right-content">
-        <span class="header-right-content-button1" th:text="${userName} + '님'"> </span>
-        <button th:onclick="|location.href='@{/user/cart}'|"> CART</button>
-        <button th:onclick="|location.href='@{/user/info}'|"> INFO</button>
-        <button th:onclick="|location.href='@{/user/logout}'|"> LOGOUT</button>
-    </div>
-
-    <div th:if="${admin} == null"></div>
-    <div th:unless="${admin} == null">
-        <button th:onclick="|location.href='@{/manage}'|">MANAGE</button>
+<div class="item-container">
+    <div class="item-wrapper" th:each="data : ${item}">
+        <div>
+            <img th:src="@{${data.imgPath}}" alt="이미지를 불러오는데 실패하였습니다.">
+        </div>
+        <div class="item-desc">
+            <span th:text="${data.name}"></span>
+            <span th:text="${data.price} + '원'"></span>
+            <a th:href="@{/item/{id} (id=${data.id}) }" th:text="상세보기"></a>
+        </div>
     </div>
 </div>
 
-<table>
-    <thead>
-    <tr>
-        <td>ID</td>
-        <td>제품명</td>
-        <td>가격</td>
-        <td>재고수량</td>
-    </tr>
-    </thead>
-
-    <tbody>
-    <tr th:each="data : ${item}">
-        <td th:text="${data.id}"></td>
-        <td>
-            <a th:href="@{/item/{id} (id=${data.id}) }" th:text="${data.name}"></a>
-        </td>
-        <td th:text="${data.price}"></td>
-        <td th:text="${data.stock}"></td>
-    </tr>
-    </tbody>
-</table>
 </body>
 </html>

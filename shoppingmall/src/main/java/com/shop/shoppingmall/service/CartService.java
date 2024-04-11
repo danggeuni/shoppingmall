@@ -11,6 +11,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -19,15 +20,15 @@ import java.util.concurrent.TimeUnit;
 public class CartService {
 
     private final CartRepository cartRepository;
-    //    private final RedisTemplate<String, String> redisTemplate;
     private final ValueOperations<String, String> opsForValue;
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final RedisTemplate<String, String> redisTemplate;
 
     @Autowired
     public CartService(CartRepository cartRepository, RedisTemplate<String, String> redisTemplate) {
         this.cartRepository = cartRepository;
-//        this.redisTemplate = redisTemplate;
         this.opsForValue = redisTemplate.opsForValue();
+        this.redisTemplate = redisTemplate;
     }
 
     public List<CartEntity> viewCartList(String email) throws JsonProcessingException {
@@ -35,8 +36,7 @@ public class CartService {
 
         if (cached != null) {
             log.info("cache hit!! : {}", cached);
-            List<CartEntity> cartEntities = objectMapper.readValue(cached, new TypeReference<List<CartEntity>>() {
-            });
+            List<CartEntity> cartEntities = objectMapper.readValue(cached, new TypeReference<>() {});
             return cartEntities;
         }
 
@@ -53,5 +53,10 @@ public class CartService {
 
     private String generateCacheKey(String email) {
         return "cart_list:" + email;
+    }
+
+    public void deleteCartItem(Long id, String email) {
+        cartRepository.deleteById(id);
+        redisTemplate.delete(generateCacheKey(email));
     }
 }

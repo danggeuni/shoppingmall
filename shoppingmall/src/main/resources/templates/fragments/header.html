@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="fragment-header" id="header">
+    <div th:onclick="|location.href='@{/}'|" id="title">
+        <h2>Danggueni Shop</h2>
+    </div>
+
+    <div th:if="${userId} == null" class="header-right-content">
+        <button class="header-right-content-button1" th:onclick="|location.href='@{/user/login}'|">LOGIN</button>
+        <button th:onclick="|location.href='@{/user/join}'|"> JOIN</button>
+    </div>
+
+    <div th:unless="${userId} == null" class="header-right-content">
+        <span class="header-right-content-button1" th:text="${userName} + '님'"> </span>
+        <button th:onclick="|location.href='@{/user/cart}'|"> CART</button>
+        <button th:onclick="|location.href='@{/user/info}'|"> INFO</button>
+        <button th:onclick="|location.href='@{/user/logout}'|"> LOGOUT</button>
+    </div>
+
+    <div th:if="${admin} == null"></div>
+    <div th:unless="${admin} == null">
+        <button th:onclick="|location.href='@{/manage}'|">MANAGE</button>
+    </div>
+</div>
+</html>

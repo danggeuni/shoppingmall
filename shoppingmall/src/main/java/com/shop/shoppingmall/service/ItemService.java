@@ -4,18 +4,26 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shop.shoppingmall.controller.dto.adminDto.ItemAddDto;
 import com.shop.shoppingmall.controller.dto.ItemDetailDto;
 import com.shop.shoppingmall.controller.dto.adminDto.ItemEditDto;
+import com.shop.shoppingmall.domain.entity.CartEntity;
+import com.shop.shoppingmall.domain.entity.ImgFile;
 import com.shop.shoppingmall.domain.entity.Item;
 import com.shop.shoppingmall.domain.repository.CartRepository;
 import com.shop.shoppingmall.domain.repository.ItemRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 @Service
+@Slf4j
 public class ItemService {
 
     private final ItemRepository itemRepository;
@@ -30,8 +38,26 @@ public class ItemService {
         this.redisTemplate = redisTemplate;
     }
 
-    public void itemAdd(ItemAddDto itemAddDto) {
+    public void itemAdd(ItemAddDto itemAddDto, MultipartFile imgFile) {
         itemRepository.addItem(itemAddDto.toEntity());
+
+        if (!imgFile.isEmpty()) {
+            try {
+                String originName = imgFile.getOriginalFilename();
+                String projectPath = System.getProperty("user.dir") + "/shoppingmall/src/main/resources/static/files/";
+
+                String savedFileName = UUID.randomUUID() + "_" + originName;
+
+                File saveFile = new File(projectPath, savedFileName);
+                imgFile.transferTo(saveFile);
+
+                Long lastId = itemRepository.getLastArticle().getId();
+                ImgFile file = new ImgFile(lastId, originName, "/files/" + savedFileName);
+                itemRepository.addImg(file);
+            } catch (IOException e) {
+                throw new RuntimeException("업로드에 실패하였습니다.");
+            }
+        }
     }
 
     public List<Item> showItems() {
@@ -40,7 +66,7 @@ public class ItemService {
 
     public ItemDetailDto showItem(Long id) {
         Item item = itemRepository.findById(id);
-        return new ItemDetailDto(item.getId(), item.getName(), item.getPrice(), item.getStock(), null);
+        return new ItemDetailDto(item.getId(), item.getName(), item.getPrice(), item.getStock(), item.getImgPath());
     }
 
     public List<Item> manageItems() {
@@ -59,10 +85,18 @@ public class ItemService {
         itemRepository.deleteItem(id);
     }
 
-    public void addCart(String email, Long id) {
+    public void addCart(String email, Long id, int amount) {
         Item item = itemRepository.findById(id);
-        cartRepository.addCart(email, item);
 
+        // 데이터 존재하는지 확인
+        CartEntity entity = cartRepository.findCart(email, id);
+
+        if (entity != null) {
+            entity.addCount(amount);
+            cartRepository.updateCart(entity);
+        } else {
+            cartRepository.addCart(email, item, amount);
+        }
         redisTemplate.delete(generateCacheKey(email));
     }
 

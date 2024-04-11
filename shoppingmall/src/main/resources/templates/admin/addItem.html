@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>AddItem</title>
+    <div th:replace="/fragments/head.html :: fragment-head"></div>
     <style>
         #header {
             width: 100%;
@@ -28,17 +29,8 @@
     </style>
 </head>
 <body>
-<div id="header">
-    <div id="title">
-        <h2>Danggueni Shop</h2>
-    </div>
-
-    <div id="header-right-content">
-        <span id="header-right-content-button1">LOGIN </span>
-        <span> JOIN</span>
-    </div>
-</div>
-<form action="/manage/add" method="post">
+<div th:replace="/fragments/header.html :: fragment-header"></div>
+<form action="/manage/add" method="post" enctype="multipart/form-data">
     <div>
         <label for="name">제품명</label>
         <input id="name" name="name" required>
@@ -62,6 +54,11 @@
     <div>
         <label for="status">판매상태</label>
         <input type="checkbox" id="status" name="status">
+    </div>
+
+    <div>
+        <label for="img-file">상품 이미지 업로드</label>
+        <input type="file" id="img-file" name="imgFile">
     </div>
 
     <button type="submit">등록</button>

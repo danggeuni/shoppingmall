@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>EditItem</title>
-    <style>
-    </style>
+    <div th:replace="/fragments/head.html :: fragment-head"></div>
 </head>
 <body>
-
+<div th:replace="/fragments/header.html :: fragment-header"></div>
 <form th:action="@{/manage/edit/{id}(id=${item.id})}" method="post">
     <input type="hidden" th:value="${item.id}">
 

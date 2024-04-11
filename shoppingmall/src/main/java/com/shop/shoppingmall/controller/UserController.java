@@ -3,7 +3,9 @@ package com.shop.shoppingmall.controller;
 import com.shop.shoppingmall.controller.dto.userDto.UserEditDto;
 import com.shop.shoppingmall.controller.dto.userDto.UserJoinDto;
 import com.shop.shoppingmall.controller.dto.userDto.UserLoginDto;
+import com.shop.shoppingmall.domain.entity.CartEntity;
 import com.shop.shoppingmall.domain.entity.UserEntity;
+import com.shop.shoppingmall.service.CartService;
 import com.shop.shoppingmall.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,10 +20,12 @@ import javax.servlet.http.HttpSession;
 @RequestMapping("/user")
 public class UserController {
     private final UserService userService;
+    private final CartService cartService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, CartService cartService) {
         this.userService = userService;
+        this.cartService = cartService;
     }
 
     @GetMapping("/login")
@@ -89,8 +93,9 @@ public class UserController {
     }
 
     @DeleteMapping("cart/delete/{id}")
-    public ResponseEntity<String> cartListDelete(@PathVariable Long id) {
-        System.out.println("일단 여기까지 오면 성공!");
-        return ResponseEntity.ok(id + "has been successfully deleted");
+    public ResponseEntity<CartEntity> cartListDelete(@PathVariable Long id, HttpSession session) {
+        String email = session.getAttribute("userId").toString();
+        cartService.deleteCartItem(id, email);
+        return  ResponseEntity.ok().build();
     }
 }

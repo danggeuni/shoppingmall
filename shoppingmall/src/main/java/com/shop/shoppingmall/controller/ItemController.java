@@ -54,21 +54,24 @@ public class ItemController {
     }
 
     @GetMapping("/item/{id}")
-    public String detail(Model model, @PathVariable Long id, HttpServletRequest request) {
-        HttpSession session;
-        session = request.getSession();
-
+    public String detail(Model model, @PathVariable Long id, HttpSession session) {
         ItemDetailDto item = itemService.showItem(id);
         model.addAttribute("item", item);
+        model.addAttribute("userId", session.getAttribute("userId"));
         model.addAttribute("userName", session.getAttribute("userName"));
         return "detail";
     }
 
     @PostMapping("/item/cart/{id}")
-    public String addCart(@PathVariable Long id, HttpSession session) {
+    public String addCart(@PathVariable Long id, HttpSession session, int amount) {
         String email = (String) session.getAttribute("userId");
-        itemService.addCart(email, id);
-        return "redirect:/item/{id}";
+
+        if (email != null) {
+            itemService.addCart(email, id, amount);
+            return "redirect:/item/{id}";
+        } else {
+            return "redirect:/user/login";
+        }
     }
 
     @GetMapping("/user/cart")
@@ -76,10 +79,30 @@ public class ItemController {
         String email = (String) session.getAttribute("userId");
         List<CartEntity> item = cartService.viewCartList(email);
 
+        int totalPrice = 0;
+        int totalQty = 0;
+        for (CartEntity cartEntity : item) {
+            totalPrice = totalPrice + (cartEntity.getPrice() * cartEntity.getCount());
+            totalQty = totalQty + cartEntity.getCount();
+        }
+
         model.addAttribute("item", item);
         model.addAttribute("userId", session.getAttribute("userId"));
         model.addAttribute("userName", session.getAttribute("userName"));
+        model.addAttribute("totalPrice", totalPrice);
+        model.addAttribute("totalQty", totalQty);
 
         return "item/cart";
     }
+
+    @GetMapping("/item/order/{id}")
+    public String orderItem(Model model) {
+        return "order";
+    }
+
+    @PostMapping("/item/order/")
+    public void orderItem() {
+
+    }
+
 }
