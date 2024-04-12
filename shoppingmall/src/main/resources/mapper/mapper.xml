@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ShoppingMall">
+    <insert id="addItem" parameterType="item">
+        INSERT INTO ITEM (ITEM_CODE, NAME, PRICE, STOCK, CREATE_AT, UPDATE_AT, STATUS)
+        VALUES (#{itemCode}, #{name}, #{price}, #{stock}, #{createAt}, #{updateAt}, #{status})
+    </insert>
+
+    <select id="showItems" resultType="item">
+        SELECT * FROM ITEM LEFT OUTER JOIN IMG ON ITEM.ID = IMG.ID WHERE STATUS = 'on'
+    </select>
+
+    <select id="manageItems" resultType="item">
+        SELECT * FROM ITEM LEFT OUTER JOIN IMG ON ITEM.ID = IMG.ID
+    </select>
+
+    <select id="findItem" resultType="item">
+        SELECT * FROM ITEM
+        LEFT OUTER JOIN IMG ON ITEM.ID = IMG.ID
+        WHERE ITEM.ID = #{id}
+    </select>
+
+    <select id="getLastItem" resultType="item">
+        SELECT * FROM ITEM LEFT OUTER JOIN IMG ON ITEM.ID = IMG.ID
+        WHERE ITEM.ID = LAST_INSERT_ID()
+    </select>
+
+    <update id="editItem" parameterType="map">
+        UPDATE ITEM SET ITEM_CODE = #{itemCode}, NAME = #{name}, PRICE = #{price}, STOCK = #{stock}, STATUS = #{status} WHERE ID = #{id}
+    </update>
+
+    <update id="addImg" parameterType="imgFile">
+        INSERT INTO IMG (ID, IMG_NAME, IMG_PATH) VALUES (#{id}, #{imgName}, #{imgPath})
+    </update>
+
+    <delete id="deleteImg" parameterType="Long">
+        DELETE FROM IMG WHERE ID = #{id}
+    </delete>
+
+    <delete id="deleteItem" parameterType="Long">
+        DELETE FROM ITEM WHERE ID = #{id}
+    </delete>
+
+
+<!--    유저 SQL -->
+
+    <select id="findById" resultType="userEntity">
+        SELECT * FROM USER WHERE EMAIL = #{email}
+    </select>
+
+    <insert id="joinUser" parameterType="userEntity">
+        INSERT INTO USER (EMAIL, PASSWORD, NAME, PHONE, ADDRESS) VALUES (#{email}, #{password}, #{name}, #{phone}, #{address})
+    </insert>
+
+    <update id="editUser" parameterType="map">
+        UPDATE USER SET PASSWORD = #{password}, NAME = #{name}, PHONE = #{phone}, ADDRESS = #{address} WHERE EMAIL = #{email}
+    </update>
+
+
+<!--    주문 SQL -->
+    <insert id="order" parameterType="map">
+        INSERT INTO ITEM_ORDER (USER_NAME, USER_PHONE, AMOUNT) VALUES (#{userName}, #{userPhone}, #{amount})
+    </insert>
+
+    <select id="findLastOrder" resultType="orderEntity">
+        SELECT * FROM ITEM_ORDER WHERE ID = LAST_INSERT_ID()
+    </select>
+
+    <update id="addOrderItem" parameterType="map">
+        INSERT INTO ORDERED_ITEM (ORDER_NUM, ITEM_ID, PRICE, COUNT, AMOUNT) VALUES (#{orderNum}, #{itemId}, #{price}, #{count}, #{amount})
+    </update>
+
+    <insert id="addSingleOrderItem" parameterType="map">
+        INSERT INTO ORDERED_ITEM (ORDER_NUM, ITEM_ID, PRICE, COUNT, AMOUNT) VALUES (#{orderNum}, #{itemId}, #{price}, #{count}, #{amount})
+    </insert>
+
+    <update id="addDelivery" parameterType="deliveryEntity">
+        INSERT INTO DELIVERY (ORDER_NO, ORDER_ID, ORDER_PHONE, DEL_NAME, DEL_PHONE, DEL_ADDRESS, DEL_MEMO, STATUS) VALUES (#{orderNo}, #{orderId}, #{orderPhone}, #{delName}, #{delPhone}, #{delAddress}, #{memo}, #{status})
+    </update>
+
+    <select id="findByEmail" resultType="deliveryEntity">
+        SELECT * FROM DELIVERY WHERE ORDER_ID = #{userId}
+    </select>
+
+
+<!--    카트 SQL -->
+    <update id="addCart" parameterType="map">
+        INSERT INTO CART (EMAIL, ITEM_ID, COUNT) VALUES (#{email}, #{itemId}, #{count})
+    </update>
+
+    <update id="updateCart" parameterType="cartEntity">
+        UPDATE CART SET COUNT = #{count} WHERE EMAIL = #{email} AND ITEM_ID = #{itemId}
+    </update>
+
+    <select id="viewCart" resultType="cartEntity">
+        SELECT * FROM CART LEFT OUTER JOIN ITEM ON CART.ITEM_ID = ITEM.ID
+        WHERE EMAIL = #{email}
+    </select>
+
+    <select id="findCart" parameterType="map" resultType="cartEntity">
+        SELECT * FROM CART LEFT OUTER JOIN ITEM ON CART.ITEM_ID = ITEM.ID WHERE EMAIL = #{email} AND ITEM_ID = #{itemId}
+    </select>
+
+    <delete id="deleteById" parameterType="Long">
+        DELETE FROM CART WHERE ID = #{id}
+    </delete>
+</mapper>

@@ -1,47 +1,31 @@
 package com.shop.shoppingmall.domain.repository;
 
-import com.shop.shoppingmall.controller.dto.userDto.UserEditDto;
 import com.shop.shoppingmall.domain.entity.UserEntity;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+
+import java.util.Map;
 
 @Repository
 public class UserRepository {
 
-    private final JdbcTemplate jdbcTemplate;
+    private final SqlSessionTemplate sql;
 
     @Autowired
-    public UserRepository(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public UserRepository(SqlSessionTemplate sql) {
+        this.sql = sql;
     }
 
     public UserEntity findById(String email) {
-        try {
-            return jdbcTemplate.queryForObject("SELECT * FROM USER WHERE EMAIL = ?", new Object[]{email}, userLoginDtoRowMapper());
-        } catch (EmptyResultDataAccessException e) {
-            return null;
-        }
+        return sql.selectOne("ShoppingMall.findById", email);
     }
 
     public void joinUser(UserEntity userEntity) {
-        jdbcTemplate.update("INSERT INTO USER (EMAIL, PASSWORD, NAME, PHONE, ADDRESS) VALUES (?, ?, ?, ?, ?)", userEntity.getEmail(), userEntity.getPassword(), userEntity.getName(), userEntity.getPhone(), userEntity.getAddress());
+        sql.update("ShoppingMall.joinUser", userEntity);
     }
 
-    public void editUser(UserEditDto dto, String id) {
-        jdbcTemplate.update("UPDATE USER SET PASSWORD = ?, NAME = ?, PHONE = ?, ADDRESS = ? WHERE EMAIL = ?", dto.getPassword(), dto.getName(), dto.getPhone(), dto.getAddress(), id);
+    public void editUser(Map<String, Object> map) {
+        sql.update("ShoppingMall.editUser", map);
     }
-
-    RowMapper<UserEntity> userLoginDtoRowMapper() {
-        return (rs, rowNum) -> new UserEntity(
-                rs.getString("EMAIL"),
-                rs.getString("PASSWORD"),
-                rs.getString("NAME"),
-                rs.getString("PHONE"),
-                rs.getString("ADDRESS")
-        );
-    }
-
 }

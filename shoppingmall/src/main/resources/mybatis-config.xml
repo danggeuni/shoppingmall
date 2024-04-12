@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
+
+    <typeAliases>
+        <typeAlias type="com.shop.shoppingmall.domain.entity.Item" alias="item" />
+        <typeAlias type="com.shop.shoppingmall.controller.dto.adminDto.ItemEditDto" alias="itemEditDto" />
+        <typeAlias type="com.shop.shoppingmall.domain.entity.ImgFile" alias="imgFile" />
+        <typeAlias type="com.shop.shoppingmall.domain.entity.UserEntity" alias="userEntity" />
+        <typeAlias type="com.shop.shoppingmall.domain.entity.OrderEntity" alias="orderEntity" />
+        <typeAlias type="com.shop.shoppingmall.domain.entity.DeliveryEntity" alias="deliveryEntity" />
+        <typeAlias type="com.shop.shoppingmall.domain.entity.CartEntity" alias="cartEntity" />
+    </typeAliases>
+</configuration>

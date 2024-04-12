@@ -30,3 +30,7 @@ spring:
       minimum-idle: 1
       idle-timeout: 60000
       connection-init-sql: SELECT 1
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  config-location: classpath:mybatis-config.xml

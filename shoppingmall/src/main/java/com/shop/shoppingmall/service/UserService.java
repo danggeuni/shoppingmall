@@ -9,6 +9,9 @@ import com.shop.shoppingmall.utils.Encryption;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
 public class UserService {
 
@@ -57,6 +60,15 @@ public class UserService {
     public void editUser(UserEditDto dto, String id) {
         Encryption encryption = new Encryption();
         String encryptPwd = encryption.getEncrypt(dto.getPassword(), encryption.salt);
-        userRepository.editUser(new UserEditDto(dto.getName(), encryptPwd, dto.getPhone(), dto.getAddress()), id);
+
+        UserEditDto dto1 = new UserEditDto(dto.getName(), encryptPwd, dto.getPhone(), dto.getAddress());
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", dto1.getName());
+        map.put("phone", dto1.getPhone());
+        map.put("address", dto1.getAddress());
+        map.put("password", dto1.getPassword());
+        map.put("email", id);
+
+        userRepository.editUser(map);
     }
 }

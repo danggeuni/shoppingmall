@@ -82,6 +82,11 @@
         <div th:text="${totalPrice} + ' 원'"></div>
         <button class="order-button" type="submit">구매하기</button>
     </div>
+
+    <div class="single-item-order">
+        <input name="amount" th:value="${amount}" type="hidden">
+        <input name="itemId" th:value="${itemId}" type="hidden">
+    </div>
 </form>
 </body>
 </html>

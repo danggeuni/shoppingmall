@@ -6,6 +6,7 @@ import com.shop.shoppingmall.controller.dto.userDto.UserLoginDto;
 import com.shop.shoppingmall.domain.entity.CartEntity;
 import com.shop.shoppingmall.domain.entity.DeliveryEntity;
 import com.shop.shoppingmall.domain.entity.UserEntity;
+import com.shop.shoppingmall.service.CacheService;
 import com.shop.shoppingmall.service.CartService;
 import com.shop.shoppingmall.service.OrderService;
 import com.shop.shoppingmall.service.UserService;
@@ -25,12 +26,14 @@ public class UserController {
     private final UserService userService;
     private final CartService cartService;
     private final OrderService orderService;
+    private final CacheService cacheService;
 
     @Autowired
-    public UserController(UserService userService, CartService cartService, OrderService orderService) {
+    public UserController(UserService userService, CartService cartService, OrderService orderService, CacheService cacheService) {
         this.userService = userService;
         this.cartService = cartService;
         this.orderService = orderService;
+        this.cacheService = cacheService;
     }
 
     @GetMapping("/login")

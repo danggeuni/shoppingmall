@@ -9,18 +9,13 @@ import com.shop.shoppingmall.domain.entity.CartEntity;
 import com.shop.shoppingmall.domain.entity.Item;
 import com.shop.shoppingmall.domain.entity.OrderEntity;
 import com.shop.shoppingmall.domain.entity.UserEntity;
-import com.shop.shoppingmall.service.CartService;
-import com.shop.shoppingmall.service.ItemService;
-import com.shop.shoppingmall.service.OrderService;
-import com.shop.shoppingmall.service.UserService;
+import com.shop.shoppingmall.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -34,13 +29,15 @@ public class ItemController {
     private final CartService cartService;
     private final OrderService orderService;
     private final UserService userService;
+    private final CacheService cacheService;
 
     @Autowired
-    public ItemController(ItemService itemService, CartService cartService, OrderService orderService, UserService userService) {
+    public ItemController(ItemService itemService, CartService cartService, OrderService orderService, UserService userService, CacheService cacheService) {
         this.itemService = itemService;
         this.cartService = cartService;
         this.orderService = orderService;
         this.userService = userService;
+        this.cacheService = cacheService;
     }
 
     @GetMapping
@@ -121,12 +118,16 @@ public class ItemController {
             model.addAttribute("item", item);
             model.addAttribute("totalPrice", item.getPrice() * amount);
             model.addAttribute("totalQty", amount);
+            model.addAttribute("amount", amount);
+            model.addAttribute("itemId", itemId);
         } else {
             List<CartEntity> item = cartService.viewCartList(email);
+
             for (CartEntity cartEntity : item) {
                 totalPrice = totalPrice + (cartEntity.getPrice() * cartEntity.getCount());
                 totalQty = totalQty + cartEntity.getCount();
             }
+
             model.addAttribute("item", item);
             model.addAttribute("totalPrice", totalPrice);
             model.addAttribute("totalQty", totalQty);
@@ -141,34 +142,45 @@ public class ItemController {
 
     @Transactional
     @PostMapping("/item/order/")
-    public String orderItem(HttpSession session, Delivery delivery) throws JsonProcessingException {
-        List<CartEntity> entity = cartService.viewCartList(session.getAttribute("userId").toString());
+    public String orderItem(HttpSession session, Delivery delivery, Integer amount, Long itemId) throws JsonProcessingException {
         UserEntity user = userService.findById(session.getAttribute("userId").toString());
 
         int totalPrice = 0;
         int totalQty = 0;
 
-        for (CartEntity cartEntity : entity) {
-            totalPrice = totalPrice + (cartEntity.getPrice() * cartEntity.getCount());
-            totalQty = totalQty + cartEntity.getCount();
-        }
+        if (amount != null) {
+            Item item = itemService.findById(itemId);
+            orderService.addOrder(user, item.getPrice() * amount);
 
-        orderService.addOrder(user, totalPrice);
-        OrderEntity order = orderService.findLastOrder();
+            OrderEntity order = orderService.findLastOrder();
+            orderService.addSingleOrderItem(order.getId(), item, amount);
+            itemService.editItem(itemId, new ItemEditDto(item.getId(), item.getItemCode(), item.getName(), item.getPrice(), item.getStock() - amount, item.getStatus()));
+            orderService.addDelivery(user, order.getId(), delivery);
+        } else {
+            List<CartEntity> items = cartService.viewCartList(session.getAttribute("userId").toString());
 
-        for (CartEntity e : entity) {
-            if (e.getStock() == 0 || e.getStock() < e.getCount()) {
-                return "redirect:/";
+            for (CartEntity cartEntity : items) {
+                totalPrice = totalPrice + (cartEntity.getPrice() * cartEntity.getCount());
+                totalQty = totalQty + cartEntity.getCount();
             }
-            // 아이템 개별 추가
-            orderService.addOrderItem(order.getId(), e, totalPrice);
 
-            // 아이템 stock 수량 수정
-            Item item = itemService.findById(e.getItemId());
-            itemService.editItem(e.getItemId(), new ItemEditDto(item.getId(), item.getItemCode(), item.getName(), item.getPrice(), item.getStock() - e.getCount(), item.getStatus()));
-            cartService.deleteCartItem(e.getId(), user.getEmail());
+            orderService.addOrder(user, totalPrice);
+            OrderEntity order = orderService.findLastOrder();
+
+            for (CartEntity e : items) {
+                if (e.getStock() == 0 || e.getStock() < e.getCount()) {
+                    return "redirect:/";
+                }
+                // 아이템 개별 추가
+                orderService.addOrderItem(order.getId(), e);
+
+                // 아이템 stock 수량 수정
+                Item item = itemService.findById(e.getItemId());
+                itemService.editItem(e.getItemId(), new ItemEditDto(item.getId(), item.getItemCode(), item.getName(), item.getPrice(), item.getStock() - e.getCount(), item.getStatus()));
+                cartService.deleteCartItem(e.getId(), user.getEmail());
+            }
+            orderService.addDelivery(user, order.getId(), delivery);
         }
-        orderService.addDelivery(user, order.getId(), delivery);
 
         return "redirect:/user/cart";
     }
